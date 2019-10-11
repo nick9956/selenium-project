@@ -1,10 +1,7 @@
-from selenium.webdriver.chrome.webdriver import WebDriver
-
-driver = None
+from selenium import webdriver
 
 
 def getOrCreateWebdriver():
-    global driver
-    driver = WebDriver(executable_path='C:/Users/Mykola_Rudym/Documents/selenium/chromedriver.exe')
+    driver = webdriver.Chrome(executable_path='C:/Users/Mykola_Rudym/selenium-project/Drivers/chromedriver.exe')
     driver.maximize_window()
     return driver

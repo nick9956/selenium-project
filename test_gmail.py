@@ -1,65 +1,86 @@
 import unittest
-import mypkg
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
+from Pages.Base_page import WebDriverFactory, Chrome_alerts
+from Pages.Sign_in_email_page import Sign_in_email_page as Sign_in_email
+from Pages.Sign_in_password_page import Sign_in_password_page
+from Pages.Inbox_page import Inbox_page, Compose_pop_up, Account_pop_up
+from Pages.Email_page import Email_page
+from Pages.Sign_out_page import Signout_page
 
 
 class Test_Gmail(unittest.TestCase):
-    username_sender = 'mikola.rudim@gmail.com'
+    email = 'mykola.rudym@nure.ua'
+    password = "2203Rudim1712"
     subject_sender = 'Feeling'
     body_of_letter_sender = 'Hello! How are you?'
 
     @classmethod
     def setUpClass(cls):
-        cls.driver = mypkg.getOrCreateWebdriver()
+        cls.driver = WebDriverFactory.get_webdriver("chrome")
 
-    def test_step1_login_to_gmai(self):
-        self.driver.get('https://mail.google.com')
-        email = self.driver.find_element_by_xpath('//*[@id="identifierId"]')
-        email.clear()
-        email.send_keys(self.username_sender)
-        email.send_keys(Keys.ENTER)
+    def waiting(self, time):
+        self.wait_element = WebDriverWait(self.driver, time)
+
+    def compare_letter_text(self):
+        email_page = Email_page(self.driver)
+        self.assertEqual(self.body_of_letter_sender, email_page.get_letter_text())
+
+    def compare_subject_text(self):
+        email_page = Email_page(self.driver)
+        self.assertEqual(self.subject_sender, email_page.get_subject_text())
+
+    def compare_emails(self):
+        email_page = Email_page(self.driver)
+        self.assertEqual(Test_Gmail.email, email_page.get_sender_email())
+
+    def test_step1_login_to_gmail(self):
+        signin_email_page = Sign_in_email(self.driver)
+        signin_email_page.get_start_page(Sign_in_email.url)
+        signin_email_page.enter_and_submit_email(Test_Gmail.email)
         self.driver.implicitly_wait(5)
-        password = self.driver.find_element_by_name('password')
-        password.send_keys("2203Rudim1712")
-        password.send_keys(Keys.ENTER)
-        global wait_element
-        wait_element = WebDriverWait(self.driver, 5)
-        wait_element.until(ec.presence_of_element_located((By.XPATH, '//*[@class="gb_ne gb_qc gb_le"]')))
+        signin_password_page = Sign_in_password_page(self.driver)
+        signin_password_page.enter_and_submit_password(Test_Gmail.password)
+        self.waiting(5)
+        self.wait_element.until(ec.presence_of_element_located((By.XPATH, '//*[@class="gb_ne gb_qc gb_le"]')))
 
     def test_step2_letter_to_myself(self):
-        self.driver.find_element_by_xpath('//*[@class="T-I J-J5-Ji T-I-KE L3"]').click()
-        self.driver.find_element_by_xpath('//*[@class="AD"]').is_displayed()
-        self.driver.find_element_by_xpath('//*[@name="to"]').send_keys(self.username_sender)
-        self.driver.find_element_by_xpath('//*[@name="subjectbox"]').send_keys(self.subject_sender)
-        self.driver.find_element_by_xpath('//*[@class="Am Al editable LW-avf tS-tW"]').send_keys(self.body_of_letter_sender)
-        send_button = self.driver.find_element_by_xpath('//*[@class="T-I J-J5-Ji aoO v7 T-I-atl L3"]')
-        send_button.click()
+        compose_pop_up = Compose_pop_up(self.driver)
+        compose_pop_up.open_compose_pop_up()
+        self.waiting(5)
+        self.driver.find_element_by_xpath(Compose_pop_up.COMPOSE_POP_UP).is_displayed()
+        compose_pop_up.fill_to_field()
+        compose_pop_up.fill_subject_field()
+        compose_pop_up.fill_body_of_letter()
+        compose_pop_up.click_send_button()
 
     def test_step3_open_letter(self):
-        self.driver.find_element_by_xpath('//*[@class="nU n1"]').click()
-        wait_element.until(ec.presence_of_element_located((By.XPATH, '//*[@class="gb_ne gb_qc gb_le"]')))
-        letter = self.driver.find_element_by_xpath('//*[@class="bog"]/span[contains(.,"Feeling")]')
-        letter.click()
-        wait_element.until(ec.presence_of_element_located((By.XPATH, '//*[@class="aju"]')))
+        compose_pop_up = Compose_pop_up(self.driver)
+        compose_pop_up.open_compose_pop_up()
+        self.wait_element.until(ec.presence_of_element_located((By.XPATH, '//*[@class="gb_ne gb_qc gb_le"]')))
+        inbox_page = Inbox_page(self.driver)
+        inbox_page.open_letter()
+        self.waiting(5)
+        self.wait_element.until(ec.presence_of_element_located((By.XPATH, '//*[@class="aju"]')))
 
     def test_step4_match_text_in_letter(self):
-        body_of_letter_recipient = self.driver.find_element_by_xpath('//*[@class="a3s aXjCH "]/div[1]').text
-        self.assertEqual(self.body_of_letter_sender, body_of_letter_recipient)
-        subject_recipient = self.driver.find_element_by_xpath('//*[@class="hP"]').text
-        self.assertEqual(self.subject_sender, subject_recipient)
-        username_in_recipient = self.driver.find_element_by_xpath('//*[@class="gD"]').get_attribute('email')
-        self.assertEqual(self.username_sender, username_in_recipient)
+        self.compare_emails()
+        self.compare_subject_text()
+        self.compare_letter_text()
 
     def test_step5_logout(self):
-        self.driver.find_element_by_xpath('//*[@class="gb_B gb_Da gb_g"]').click()
-        wait_element.until(ec.presence_of_element_located((By.XPATH, '//*[@class="gb_Sa gb_D gb_Ec"]')))
-        self.driver.find_element_by_xpath('//*[@class="gb_0 gb_9f gb_hg gb_Se gb_pb"]').click()
-        self.driver.switch_to.alert.accept()
-        logout_message = self.driver.find_element_by_xpath('//*[@class="cRiDhf"]').text
-        self.assertEqual('Ви вийшли з облікового запису', logout_message)
+        account_pop_up = Account_pop_up(self.driver)
+        account_pop_up.open_account_information_pop_up()
+        self.waiting(5)
+        self.wait_element.until(ec.presence_of_element_located((By.XPATH, account_pop_up.ACCOUNT_POP_UP)))
+        account_pop_up.click_sign_out_button()
+        chrome_alerts = Chrome_alerts(self.driver)
+        chrome_alerts.accept_alert()
+        signout_page = Signout_page(self.driver)
+        signout_page.verify_sign_out_message()
 
     @classmethod
     def tearDownClass(cls):
