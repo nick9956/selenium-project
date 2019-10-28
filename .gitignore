@@ -1,4 +1,7 @@
 .idea
 __pycache__
-FirstEnv
+first_env
 .pytest_cache
+.log
+.exe
+
