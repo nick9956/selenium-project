@@ -1,7 +1,7 @@
-.idea
-__pycache__
-first_env
-.pytest_cache
-.log
-.exe
+/.idea
+/__pycache__
+/first_env
+/.pytest_cache
+*.log
+*.exe
 
