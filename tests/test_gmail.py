@@ -73,7 +73,7 @@ class Test_Gmail(unittest.TestCase):
         self.waiting(5)
         self.wait_element.until(ec.presence_of_element_located((By.XPATH, account_pop_up.ACCOUNT_POP_UP)))
         account_pop_up.click_sign_out_button()
-        self.waiting(3)
+        self.waiting(5)
         chrome_alerts = Chrome_alerts(self.driver)
         if(self.wait_element.until(ec.alert_is_present())==None):
             print("Chrome Alert was not present")
