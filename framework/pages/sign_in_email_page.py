@@ -1,13 +1,14 @@
-from pages.Base_page import Page_Object, Users
+from framework.pages.base_page import PageObject
 from selenium.webdriver.common.keys import Keys
+from framework.config import Parser
 
 
-class Sign_in_email_page(Page_Object):
+class SignInEmailPage(PageObject):
 
     # selectors
     EMAIL_FIELD = '//*[@id="identifierId"]'
 
-    #variables
+    # variables
     url = 'https://mail.google.com'
 
     # class methods
@@ -16,9 +17,9 @@ class Sign_in_email_page(Page_Object):
         self.driver.get(url)
 
     def enter_and_submit_email(self):
-        email_field = self.driver.find_element_by_xpath(Sign_in_email_page.EMAIL_FIELD)
+        email_field = self.driver.find_element_by_xpath(SignInEmailPage.EMAIL_FIELD)
         email_field.clear()
-        user = Users()
-        email_field.send_keys(user.get_email('Mykola'))
+        email = Parser()
+        email_field.send_keys(email.read_valid_email())
         email_field.send_keys(Keys.ENTER)
 

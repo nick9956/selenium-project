@@ -1,16 +1,17 @@
-from pages.Base_page import Page_Object, Users
+from framework.pages.base_page import PageObject
+from framework.config import Parser
 import unittest
 
 
-class Email_page(Page_Object):
+class EmailPage(PageObject):
 
-    #selectors
+    # selectors
     RECEIVED_MESSAGE_BODY = '//*[@class="a3s aXjCH "]/div[1]'
     RECEIVED_SUBJECT = '//*[@class="hP"]'
     NAME_OF_SENDER = '//*[@class="gD"]'
     LOGO_OF_SENDER = '//*[@class="aju"]'
 
-    #class methods
+    # class methods
     def get_letter_text(self):
         body_of_letter_recipient = self.driver.find_element_by_xpath(self.RECEIVED_MESSAGE_BODY).text
         return body_of_letter_recipient
@@ -25,5 +26,5 @@ class Email_page(Page_Object):
 
     def compare_emails(self):
         test_case = unittest.TestCase()
-        user_email = Users()
-        test_case.assertEqual(user_email.get_email('Mykola'), self.get_sender_email())
+        user_email = Parser()
+        test_case.assertEqual(user_email.read_valid_email(), self.get_sender_email())

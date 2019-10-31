@@ -1,8 +1,9 @@
-from pages.Base_page import Page_Object, Users
+from framework.pages.base_page import PageObject
 from selenium.webdriver.common.action_chains import ActionChains
+from framework.config import Parser
 
 
-class Inbox_page(Page_Object):
+class InboxPage(PageObject):
 
     # selectors
     COMPOSE_BUTTON = '//*[@class="T-I J-J5-Ji T-I-KE L3"]'
@@ -21,7 +22,7 @@ class Inbox_page(Page_Object):
         letter.click()
 
 
-class Compose_pop_up(Page_Object):
+class ComposePopUp(PageObject):
 
     subject_sender = 'Feeling'
     body_of_letter_sender = 'Hello! How are you?'
@@ -33,13 +34,13 @@ class Compose_pop_up(Page_Object):
     MESSAGE_BODY_FIELD = '//*[@class="Am Al editable LW-avf tS-tW"]'
     SEND_BUTTON = '//*[@class="T-I J-J5-Ji aoO v7 T-I-atl L3"]'
 
-    #class methods
+    # class methods
     def open_compose_pop_up(self):
-        self.driver.find_element_by_xpath(Inbox_page.COMPOSE_BUTTON).click()
+        self.driver.find_element_by_xpath(InboxPage.COMPOSE_BUTTON).click()
 
     def fill_to_field(self):
-        user_email = Users()
-        self.driver.find_element_by_xpath(self.TO_FIELD).send_keys(user_email.get_email('Mykola'))
+        user_email = Parser()
+        self.driver.find_element_by_xpath(self.TO_FIELD).send_keys(user_email.read_valid_email())
 
     def fill_subject_field(self):
         self.driver.find_element_by_xpath(self.SUBJECT_FIELD).send_keys(self.subject_sender)
@@ -52,18 +53,18 @@ class Compose_pop_up(Page_Object):
         send_button.click()
 
 
-class Account_pop_up(Page_Object):
+class AccountPopUp(PageObject):
 
-    #selectors
+    # selectors
     ACCOUNT_BUTTON = '//*[@class="gb_B gb_Da gb_g"]'
     ACCOUNT_POP_UP = '//*[@aria-label="Информация об аккаунте"]'
     SIGN_OUT_BUTTON = '//*[@id="gb_71"]'
 
-    #variables
+    # variables
     subject_sender = 'Feeling'
     body_of_letter_sender = 'Hello! How are you?'
 
-    #class methods
+    # class methods
     def open_account_information_pop_up(self):
         self.driver.find_element_by_xpath(self.ACCOUNT_BUTTON).click()
 

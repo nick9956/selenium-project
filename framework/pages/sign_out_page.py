@@ -1,8 +1,8 @@
-from pages.Base_page import Page_Object
+from framework.pages.base_page import PageObject
 import unittest
 
 
-class Signout_page(Page_Object):
+class Signout_page(PageObject):
 
     #selectors
     SIGNED_OUT_LABEL = '//*[@class="cRiDhf"]'

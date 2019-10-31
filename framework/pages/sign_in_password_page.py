@@ -1,18 +1,16 @@
-from pages.Base_page import Page_Object, Users
+from framework.pages.base_page import PageObject
 from selenium.webdriver.common.keys import Keys
+from framework.config import Parser
 
 
-class Sign_in_password_page(Page_Object):
+class SignInPasswordPage(PageObject):
 
     # selectors
     PASSWORD_FIELD = '//*[@name="password"]'
 
-    #variables
-    password = "2203Rudim1712"
-
     # class methods
     def enter_and_submit_password(self):
         password_field = self.driver.find_element_by_xpath(self.PASSWORD_FIELD)
-        user_password = Users()
-        password_field.send_keys(user_password.get_password('Mykola'))
+        user_password = Parser()
+        password_field.send_keys(user_password.read_valid_password())
         password_field.send_keys(Keys.ENTER)
