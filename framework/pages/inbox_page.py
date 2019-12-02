@@ -1,6 +1,6 @@
 from framework.pages.base_page import PageObject
 from selenium.webdriver.common.action_chains import ActionChains
-from framework.config import Parser
+from framework.config import Config
 
 
 class InboxPage(PageObject):
@@ -38,15 +38,14 @@ class ComposePopUp(PageObject):
     def open_compose_pop_up(self):
         self.driver.find_element_by_xpath(InboxPage.COMPOSE_BUTTON).click()
 
-    def fill_to_field(self):
-        user_email = Parser()
-        self.driver.find_element_by_xpath(self.TO_FIELD).send_keys(user_email.read_valid_email())
+    def fill_to_field(self, email):
+        self.driver.find_element_by_xpath(self.TO_FIELD).send_keys(email)
 
-    def fill_subject_field(self):
-        self.driver.find_element_by_xpath(self.SUBJECT_FIELD).send_keys(self.subject_sender)
+    def fill_subject_field(self, subject_sender):
+        self.driver.find_element_by_xpath(self.SUBJECT_FIELD).send_keys(subject_sender)
 
-    def fill_body_of_letter(self):
-        self.driver.find_element_by_xpath(self.MESSAGE_BODY_FIELD).send_keys(self.body_of_letter_sender)
+    def fill_body_of_letter(self, body_of_letter_sender):
+        self.driver.find_element_by_xpath(self.MESSAGE_BODY_FIELD).send_keys(body_of_letter_sender)
 
     def click_send_button(self):
         send_button = self.driver.find_element_by_xpath(self.SEND_BUTTON)

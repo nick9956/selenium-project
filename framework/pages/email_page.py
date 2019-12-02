@@ -1,6 +1,4 @@
 from framework.pages.base_page import PageObject
-from framework.config import Parser
-import unittest
 
 
 class EmailPage(PageObject):
@@ -23,8 +21,3 @@ class EmailPage(PageObject):
     def get_sender_email(self):
         username_in_recipient = self.driver.find_element_by_xpath(self.NAME_OF_SENDER).get_attribute('email')
         return username_in_recipient
-
-    def compare_emails(self):
-        test_case = unittest.TestCase()
-        user_email = Parser()
-        test_case.assertEqual(user_email.read_valid_email(), self.get_sender_email())
