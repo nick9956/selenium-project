@@ -5,11 +5,14 @@ from framework.pages.inbox_page import *
 from framework.pages.sign_in_email_page import *
 from framework.pages.sign_in_password_page import *
 from framework.pages.sign_out_page import *
+from framework.config import *
 
 
 class Application(object):
 
-    driver = WebDriverFactory.get_webdriver("chrome")
+    config = Config()
+
+    driver = WebDriverFactory.get_webdriver(config.chrome)
 
     account_pop_up = AccountPopUp(driver)
 

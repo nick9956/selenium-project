@@ -11,13 +11,11 @@ class EmailPage(PageObject):
 
     # class methods
     def get_letter_text(self):
-        body_of_letter_recipient = self.driver.find_element_by_xpath(self.RECEIVED_MESSAGE_BODY).text
-        return body_of_letter_recipient
+        return self.driver.find_element_by_xpath(self.RECEIVED_MESSAGE_BODY).text
 
     def get_subject_text(self):
-        subject_recipient = self.driver.find_element_by_xpath(self.RECEIVED_SUBJECT).text
-        return subject_recipient
+        return self.driver.find_element_by_xpath(self.RECEIVED_SUBJECT).text
 
     def get_sender_email(self):
-        username_in_recipient = self.driver.find_element_by_xpath(self.NAME_OF_SENDER).get_attribute('email')
-        return username_in_recipient
+        return self.driver.find_element_by_xpath(self.NAME_OF_SENDER).get_attribute('email')
+
